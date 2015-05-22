@@ -1,2 +1,2 @@
 test:
-	python get.py
+	python get.py > samples.csv

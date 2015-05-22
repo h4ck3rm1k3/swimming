@@ -51,7 +51,8 @@ def get(x,y):
         d = json.load(o)
         #pprint.pprint()
         o.close()
-    return extract(d)
+    #return extract(d)
+    return d
 
 def merge(a,b):
     if a[0] and b[0]:
@@ -103,23 +104,83 @@ def scan():
     return box
 
 
+data_f = ["Zipcode","ZipCodeType","City","State","LocationType","Lat","Long","Location","Decommisioned","TaxReturnsFiled","EstimatedPopulation","TotalWages"]
+
+fields = [
+    u'address1',
+    u'address2',
+    u'city',
+    u'facility_id',
+    u'facility_name',
+    u'latitude' ,
+    u'longitude',
+    u'mas',
+    u'mas_contact',
+    u'mas_email',
+    u'mas_phone',
+    u'mas_program',
+    u'usa_state_code']
+
+club_f = [
+    u'club_id',
+    u'club_name',
+    u'contact_business_phone',
+    u'contact_email',
+    u'contact_name',
+    u'nspf',
+    u'usas',
+    u'usms',
+    u'website'
+]
+
+allfield=[]
+allfield.extend(data_f)
+allfield.extend(fields)
+allfield.extend(club_f)
+print "^".join(allfield)
+
+
+seen = {}
 
 def zipc():
+
     f = open("free-zipcode-database-Primary.csv")
     for l in f:
+        l = l.rstrip()
         (Zipcode,ZipCodeType,City,State,LocationType,Lat,Long,Location,Decommisioned,TaxReturnsFiled,EstimatedPopulation,TotalWages)=l.split(",")
         if Zipcode == "\"Zipcode\"": 
             continue
-        print Lat,Long
+        #print Lat,Long
         x=get(Lat,Long)
-        time.sleep(0.1)
-def old():
-    f = scan()
-    if not f:
-        start= (38.863333,-104.791944)
-        #x=get(*start)
-        #rec(x)
-    else:
-        rec(f)
+        #time.sleep(0.1)
+        data = [Zipcode,ZipCodeType,City,State,LocationType,Lat,Long,Location,Decommisioned,TaxReturnsFiled,EstimatedPopulation,TotalWages]
+        #print x
+        for f in x :
+            facility=[]
+
+            facility_id = f[u'facility_id']
+
+            if facility_id not in seen :
+                seen[facility_id] =1
+
+
+                #print pprint.pprint(f)
+                for b in fields :
+                    facility.append(str(f[b]))
+
+                for c in f['clubs']:
+                    club = []
+                    for b in club_f:
+                        club.append(str(c[b]))
+                    d =[]
+                    d.extend(data)
+                    d.extend(facility)
+                    d.extend(club)
+
+
+                    print "^".join(d)
+            else:
+                # skip
+                pass
 
 zipc()
