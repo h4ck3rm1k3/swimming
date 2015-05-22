@@ -1,0 +1,5 @@
+/data/*
+/.gitignore~
+/free-zipcode-database-Primary.csv
+/free-zipcode-database-Primary.csv~
+/get.py~
